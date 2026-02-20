@@ -49,21 +49,12 @@ class LocalServerChannel final : public ILocalServerChannel {
     Public LocalServerChannel()
         : server_(ServerProvider::GetSecondServer()) {}
 
-    Public IHttpRequestPtr ReceiveRequest() override {
+    Public IHttpRequestPtr ProcessRequest() override {
         if (!PreCheck()) return nullptr;
         return server_->ReceiveMessage();
     }
 
-    Public Bool SendResponse(CStdString& requestId, CStdString& message) override {
-        if (!PreCheck()) return false;
-        return server_->SendMessage(requestId, message);
-    }
-
-    /**
-     * Dequeues one local response from the response queue (if present) and sends it through the server.
-     * @return true if a response was processed and sent, false otherwise
-     */
-    Public Bool ProcessLocalResponse() {
+     Public Bool ProcessResponse() override {
         if (!PreCheck()) return false;
         IHttpResponsePtr response = responseQueue->DequeueLocalResponse();
         if (response == nullptr) return false;
@@ -72,6 +63,7 @@ class LocalServerChannel final : public ILocalServerChannel {
         StdString message = response->ToHttpString();
         return server_->SendMessage(requestId, message);
     }
+
 };
 
 #endif  // LOCAL_SERVER_LOCAL_SERVER_CHANNEL_H

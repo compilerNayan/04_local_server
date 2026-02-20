@@ -17,7 +17,7 @@ class ILocalServerChannel {
      * Receive one request from the local server, if available.
      * @return IHttpRequestPtr if a request was received, nullptr otherwise
      */
-    Public virtual IHttpRequestPtr ReceiveRequest() = 0;
+    Public virtual IHttpRequestPtr ProcessRequest() = 0;
 
     /**
      * Send a response to the client identified by requestId.
@@ -25,7 +25,7 @@ class ILocalServerChannel {
      * @param message Response body to send
      * @return true if sent successfully, false otherwise
      */
-    Public virtual Bool SendResponse(CStdString& requestId, CStdString& message) = 0;
+    Public virtual Bool ProcessResponse() = 0;
 };
 
 #endif  // LOCAL_SERVER_ILOCAL_SERVER_CHANNEL_H
