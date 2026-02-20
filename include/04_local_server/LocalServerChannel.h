@@ -12,6 +12,8 @@
 #include <ServerProvider.h>
 #include <ILogger.h>
 #include <IWiFiConnectionStatusProvider.h>
+#include <IHttpResponseQueue.h>
+#include <IHttpResponse.h>
 
 /* @Component */
 class LocalServerChannel final : public ILocalServerChannel {
@@ -20,6 +22,8 @@ class LocalServerChannel final : public ILocalServerChannel {
     Private IWiFiConnectionStatusProviderPtr wiFiStatusProvider;
     /* @Autowired */
     Private ILoggerPtr logger;
+    /* @Autowired */
+    Private IHttpResponseQueuePtr responseQueue;
     /* @Autowired */
     Private IServerPtr server_;
 
@@ -30,7 +34,7 @@ class LocalServerChannel final : public ILocalServerChannel {
      * Returns true if we may send/receive: network connected (id != 0), server restarted if id changed, server valid.
      */
     Private Bool PreCheck() {
-        if (server_ == nullptr) return false;
+        if (server_ == nullptr || wiFiStatusProvider == nullptr) return false;
         ULong networkConnectionId = wiFiStatusProvider->GetNetworkConnectionId();
         if (networkConnectionId == 0) return false;
         if (networkConnectionId != lastNetworkConnectionId_) {
@@ -52,6 +56,20 @@ class LocalServerChannel final : public ILocalServerChannel {
 
     Public Bool SendResponse(CStdString& requestId, CStdString& message) override {
         if (!PreCheck()) return false;
+        return server_->SendMessage(requestId, message);
+    }
+
+    /**
+     * Dequeues one local response from the response queue (if present) and sends it through the server.
+     * @return true if a response was processed and sent, false otherwise
+     */
+    Public Bool ProcessLocalResponse() {
+        if (!PreCheck()) return false;
+        IHttpResponsePtr response = responseQueue->DequeueLocalResponse();
+        if (response == nullptr) return false;
+        StdString requestId = response->GetRequestId();
+        if (requestId.empty()) return false;
+        StdString message = response->ToHttpString();
         return server_->SendMessage(requestId, message);
     }
 };
