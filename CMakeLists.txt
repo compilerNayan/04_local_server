@@ -20,7 +20,14 @@ FetchContent_Declare(
     GIT_TAG        main
 )
 
-FetchContent_MakeAvailable(springbootplusplus_web 03_device_connectivity)
+# Fetch cpp_core (IRunnable, StandardDefines, etc.)
+FetchContent_Declare(
+    cpp_core
+    GIT_REPOSITORY https://github.com/compilerNayan/cpp_core.git
+    GIT_TAG        main
+)
+
+FetchContent_MakeAvailable(springbootplusplus_web 03_device_connectivity cpp_core)
 
 # Header-only INTERFACE library; exposes springbootplusplus_web
 add_library(04_local_server INTERFACE)
@@ -31,6 +38,7 @@ set_target_properties(04_local_server PROPERTIES
 
 target_include_directories(04_local_server INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include>
 )
 
@@ -46,6 +54,13 @@ else()
             $<BUILD_INTERFACE:${springbootplusplus_web_SOURCE_DIR}/src>
         )
     endif()
+endif()
+
+# Link cpp_core (provides IRunnable, StandardDefines)
+if(TARGET cpp_core::cpp_core)
+    target_link_libraries(04_local_server INTERFACE cpp_core::cpp_core)
+elseif(TARGET cpp_core)
+    target_link_libraries(04_local_server INTERFACE cpp_core)
 endif()
 
 # Link 03_device_connectivity (provides IWiFiConnectionStatusProvider)
