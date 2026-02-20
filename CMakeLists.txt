@@ -13,7 +13,14 @@ FetchContent_Declare(
     GIT_TAG        main
 )
 
-FetchContent_MakeAvailable(springbootplusplus_web)
+# Fetch 03_device_connectivity (IWiFiConnectionStatusProvider, etc.)
+FetchContent_Declare(
+    03_device_connectivity
+    GIT_REPOSITORY https://github.com/compilerNayan/03_device_connectivity.git
+    GIT_TAG        main
+)
+
+FetchContent_MakeAvailable(springbootplusplus_web 03_device_connectivity)
 
 # Header-only INTERFACE library; exposes springbootplusplus_web
 add_library(04_local_server INTERFACE)
@@ -27,7 +34,7 @@ target_include_directories(04_local_server INTERFACE
     $<INSTALL_INTERFACE:include>
 )
 
-# Link springbootplusplus_web (provides HttpRequestManager, HttpRequestDispatcher, etc.)
+# Link springbootplusplus_web (provides HttpRequestManager, IServer, ILogger, etc.)
 if(TARGET springbootplusplus_web::springbootplusplus_web)
     target_link_libraries(04_local_server INTERFACE springbootplusplus_web::springbootplusplus_web)
 elseif(TARGET springbootplusplus_web)
@@ -37,6 +44,21 @@ else()
     if(springbootplusplus_web_SOURCE_DIR)
         target_include_directories(04_local_server INTERFACE
             $<BUILD_INTERFACE:${springbootplusplus_web_SOURCE_DIR}/src>
+        )
+    endif()
+endif()
+
+# Link 03_device_connectivity (provides IWiFiConnectionStatusProvider)
+if(TARGET 03_device_connectivity::03_device_connectivity)
+    target_link_libraries(04_local_server INTERFACE 03_device_connectivity::03_device_connectivity)
+elseif(TARGET 03_device_connectivity)
+    target_link_libraries(04_local_server INTERFACE 03_device_connectivity)
+else()
+    FetchContent_GetProperties(03_device_connectivity)
+    if(03_device_connectivity_SOURCE_DIR)
+        target_include_directories(04_local_server INTERFACE
+            $<BUILD_INTERFACE:${03_device_connectivity_SOURCE_DIR}/include>
+            $<BUILD_INTERFACE:${03_device_connectivity_SOURCE_DIR}>
         )
     endif()
 endif()

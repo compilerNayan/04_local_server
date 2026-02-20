@@ -1,17 +1,27 @@
 {
-  "name": "04_local_server",
-  "version": "1.0.0",
-  "description": "Header-only local server library; includes springbootplusplus_web",
-  "keywords": ["arduino", "server", "web", "http"],
-  "authors": [{"name": "Nayan"}],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/compilerNayan/04_local_server.git"
-  },
-  "dependencies": {
-    "springbootplusplus_web": "https://github.com/compilerNayan/springbootplusplus_web.git"
-  },
-  "license": "MIT",
-  "frameworks": "arduino",
-  "platforms": "*"
-}
+    "name": "04_local_server",
+    "version": "1.0.0",
+    "description": "Header-only local server library; includes springbootplusplus_web",
+    "keywords": [
+      "arduino",
+      "server",
+      "web",
+      "http"
+    ],
+    "authors": [
+      {
+        "name": "Nayan"
+      }
+    ],
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/compilerNayan/04_local_server.git"
+    },
+    "dependencies": {
+      "springbootplusplus_web": "https://github.com/compilerNayan/springbootplusplus_web.git",
+      "03_device_connectivity": "https://github.com/compilerNayan/03_device_connectivity.git"
+    },
+    "license": "MIT",
+    "frameworks": "arduino",
+    "platforms": "*"
+  }
