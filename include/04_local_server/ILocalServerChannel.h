@@ -26,6 +26,8 @@ class ILocalServerChannel {
      * @return true if sent successfully, false otherwise
      */
     Public virtual Bool ProcessResponse() = 0;
+
+    Public Virtual Bool ProcessRequestAndResponse() = 0;
 };
 
 #endif  // LOCAL_SERVER_ILOCAL_SERVER_CHANNEL_H

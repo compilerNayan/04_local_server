@@ -71,6 +71,12 @@ class LocalServerChannel final : public ILocalServerChannel {
         return server_->SendMessage(requestId, message);
     }
 
+    Public Bool ProcessRequestAndResponse() override {
+        if (!ProcessRequest()) return false;
+        if (!ProcessResponse()) return false;
+        return true;
+    }
+
 };
 
 #endif  // LOCAL_SERVER_LOCAL_SERVER_CHANNEL_H
