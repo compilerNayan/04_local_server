@@ -7,13 +7,15 @@
 #ifndef LOCAL_SERVER_LOCAL_SERVER_CHANNEL_H
 #define LOCAL_SERVER_LOCAL_SERVER_CHANNEL_H
 
-#include "ILocalServerChannel.h"
 #include <IServer.h>
 #include <ServerProvider.h>
 #include <ILogger.h>
 #include <IWiFiConnectionStatusProvider.h>
+#include <IHttpRequestQueue.h>
 #include <IHttpResponseQueue.h>
 #include <IHttpResponse.h>
+
+#include "ILocalServerChannel.h"
 
 /* @Component */
 class LocalServerChannel final : public ILocalServerChannel {
@@ -22,6 +24,8 @@ class LocalServerChannel final : public ILocalServerChannel {
     Private IWiFiConnectionStatusProviderPtr wiFiStatusProvider;
     /* @Autowired */
     Private ILoggerPtr logger;
+    /* @Autowired */
+    Private IHttpRequestQueuePtr requestQueue;
     /* @Autowired */
     Private IHttpResponseQueuePtr responseQueue;
     /* @Autowired */
@@ -49,9 +53,12 @@ class LocalServerChannel final : public ILocalServerChannel {
     Public LocalServerChannel()
         : server_(ServerProvider::GetSecondServer()) {}
 
-    Public IHttpRequestPtr ProcessRequest() override {
-        if (!PreCheck()) return nullptr;
-        return server_->ReceiveMessage();
+    Public Bool ProcessRequest() override {
+        if (!PreCheck()) return false;
+        Val request = server_->ReceiveMessage();
+        if (request == nullptr) return false;
+        requestQueue->EnqueueRequest(request);
+        return true;
     }
 
      Public Bool ProcessResponse() override {
