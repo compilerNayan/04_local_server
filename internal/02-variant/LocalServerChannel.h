@@ -15,7 +15,7 @@
 #include <IHttpResponseQueue.h>
 #include <IHttpResponse.h>
 
-#include "ILocalServerChannel.h"
+#include "../01-interface/ILocalServerChannel.h"
 
 /* @Component */
 class LocalServerChannel final : public ILocalServerChannel {
