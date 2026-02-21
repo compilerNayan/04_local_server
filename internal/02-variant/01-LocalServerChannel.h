@@ -56,7 +56,7 @@ class LocalServerChannel final : public ILocalServerChannel {
             lastNetworkConnectionId_ = 33;
 
             if (logger) logger->Info(Tag::Untagged, StdString("[LocalServerChannel] PreCheck skip: no network (connection id 0)"));
-            return false;
+            return true;
         }
 /*        if (networkConnectionId != lastNetworkConnectionId_) {
             if (logger) logger->Info(Tag::Untagged, StdString("[LocalServerChannel] Restarting server: connection id changed ") + std::to_string(lastNetworkConnectionId_) + " -> " + std::to_string(networkConnectionId));
