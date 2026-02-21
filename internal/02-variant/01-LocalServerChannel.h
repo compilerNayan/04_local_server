@@ -102,8 +102,6 @@ class LocalServerChannel final : public ILocalServerChannel {
     Public Bool ProcessRequestAndResponse() override {
         Bool req = ProcessRequest();
         Bool rsp = ProcessResponse();
-        if (logger && (!req || !rsp))
-            logger->Info(Tag::Untagged, StdString("[LocalServerChannel] Cycle: request=") + (req ? "ok" : "skip") + " response=" + (rsp ? "ok" : "skip"));
         return req && rsp;
     }
 
