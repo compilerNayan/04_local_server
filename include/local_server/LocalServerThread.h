@@ -1,6 +1,6 @@
 #ifndef LOCAL_SERVER_LOCAL_SERVER_THREAD_INCLUDE_H
 #define LOCAL_SERVER_LOCAL_SERVER_THREAD_INCLUDE_H
 
-#include "../00-interface/01-ILocalServerChannel.h"
+#include "../../internal/03-thread/01-LocalServerThread.h"
 
 #endif // LOCAL_SERVER_LOCAL_SERVER_THREAD_INCLUDE_H
