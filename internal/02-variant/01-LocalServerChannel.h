@@ -28,7 +28,7 @@ class LocalServerChannel final : public ILocalServerChannel {
     Private IHttpRequestQueuePtr requestQueue;
     /* @Autowired */
     Private IHttpResponseQueuePtr responseQueue;
-    /* @Autowired */
+
     Private IServerPtr server_;
 
     /** Last known network connection id; when it changes we restart the server. */
