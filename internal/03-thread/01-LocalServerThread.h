@@ -10,7 +10,6 @@
 #include <Thread.h>
 #include "../01-interface/01-ILocalServerChannel.h"
 
-/* @Component */
 class LocalServerThread final : public IRunnable {
 
     /* @Autowired */
