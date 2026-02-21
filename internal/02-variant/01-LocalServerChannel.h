@@ -39,7 +39,6 @@ class LocalServerChannel final : public ILocalServerChannel {
      * Returns true if we may send/receive: network connected (id != 0), server restarted if id changed, server valid.
      */
     Private Bool PreCheck() {
-        return true;
         if (server_ == nullptr) {
             if (logger) logger->Warning(Tag::Untagged, StdString("[LocalServerChannel] PreCheck skip: server is null"));
             return false;
@@ -50,15 +49,21 @@ class LocalServerChannel final : public ILocalServerChannel {
         }
         ULong networkConnectionId = wiFiStatusProvider->GetNetworkConnectionId();
         if (networkConnectionId == 0) {
+            
+            // Hack
+            server_->Stop();
+            server_->Start(DEFAULT_SERVER_PORT);
+            lastNetworkConnectionId_ = 33;
+
             if (logger) logger->Info(Tag::Untagged, StdString("[LocalServerChannel] PreCheck skip: no network (connection id 0)"));
             return false;
         }
-        if (networkConnectionId != lastNetworkConnectionId_) {
+/*        if (networkConnectionId != lastNetworkConnectionId_) {
             if (logger) logger->Info(Tag::Untagged, StdString("[LocalServerChannel] Restarting server: connection id changed ") + std::to_string(lastNetworkConnectionId_) + " -> " + std::to_string(networkConnectionId));
             server_->Stop();
             server_->Start(DEFAULT_SERVER_PORT);
             lastNetworkConnectionId_ = networkConnectionId;
-        }
+        } */
         if (!server_->IsRunning()) {
             if (logger) logger->Warning(Tag::Untagged, StdString("[LocalServerChannel] PreCheck skip: server not running"));
             return false;
