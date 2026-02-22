@@ -47,24 +47,17 @@ class LocalServerChannel final : public ILocalServerChannel {
             if (logger) logger->Warning(Tag::Untagged, StdString("[LocalServerChannel] PreCheck skip: wiFiStatusProvider is null"));
             return false;
         }
-        Static ULong networkConnectionId = 0;//wiFiStatusProvider->GetNetworkConnectionId();
+        ULong networkConnectionId = wiFiStatusProvider->GetNetworkConnectionId();
         if (networkConnectionId == 0) {
-            
-            // Hack
-            server_->Stop();
-            server_->Start(DEFAULT_SERVER_PORT);
-            lastNetworkConnectionId_ = 33;
-            networkConnectionId = 33;
-
-            //if (logger) logger->Info(Tag::Untagged, StdString("[LocalServerChannel] PreCheck skip: no network (connection id 0)"));
-            return true;
+            if (logger) logger->Info(Tag::Untagged, StdString("[LocalServerChannel] PreCheck skip: no network (connection id 0)"));
+            return false;
         }
-/*        if (networkConnectionId != lastNetworkConnectionId_) {
+        if (networkConnectionId != lastNetworkConnectionId_) {
             if (logger) logger->Info(Tag::Untagged, StdString("[LocalServerChannel] Restarting server: connection id changed ") + std::to_string(lastNetworkConnectionId_) + " -> " + std::to_string(networkConnectionId));
             server_->Stop();
             server_->Start(DEFAULT_SERVER_PORT);
             lastNetworkConnectionId_ = networkConnectionId;
-        } */
+        }
         if (!server_->IsRunning()) {
             if (logger) logger->Warning(Tag::Untagged, StdString("[LocalServerChannel] PreCheck skip: server not running"));
             return false;
