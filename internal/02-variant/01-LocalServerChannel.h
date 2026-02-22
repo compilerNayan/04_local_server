@@ -49,7 +49,7 @@ class LocalServerChannel final : public ILocalServerChannel {
         }
         ULong networkConnectionId = wiFiStatusProvider->GetNetworkConnectionId();
         if (networkConnectionId == 0) {
-            if (logger) logger->Info(Tag::Untagged, StdString("[LocalServerChannel] PreCheck skip: no network (connection id 0)"));
+            //if (logger) logger->Info(Tag::Untagged, StdString("[LocalServerChannel] PreCheck skip: no network (connection id 0)"));
             return false;
         }
         if (networkConnectionId != lastNetworkConnectionId_) {
