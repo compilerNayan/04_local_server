@@ -16,7 +16,9 @@ class LocalServerThread final : public IRunnable {
     Private ILocalServerChannelPtr localServerChannel;
 
     Public Void Run() override {
+        while (true) {
             localServerChannel->ProcessRequestAndResponse();
+        }
     }
 };
 
