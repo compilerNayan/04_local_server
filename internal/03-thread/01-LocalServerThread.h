@@ -16,6 +16,7 @@ class LocalServerThread final : public IRunnable {
     Private ILocalServerChannelPtr localServerChannel;
 
     Public Void Run() override {
+        Thread::Sleep(5000);
         while (true) {
             localServerChannel->ProcessRequestAndResponse();
             Thread::Sleep(100);
