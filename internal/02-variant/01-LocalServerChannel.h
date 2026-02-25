@@ -48,12 +48,6 @@ class LocalServerChannel final : public ILocalServerChannel {
             //if (logger) logger->Info(Tag::Untagged, StdString("[LocalServerChannel] PreCheck skip: no network (connection id 0)"));
             return false;
         }
-        if (networkConnectionId != lastNetworkConnectionId_) {
-            if (logger) logger->Info(Tag::Untagged, StdString("[LocalServerChannel] Restarting server: connection id changed ") + std::to_string(lastNetworkConnectionId_) + " -> " + std::to_string(networkConnectionId));
-            server_->Stop();
-            server_->Start(DEFAULT_SERVER_PORT);
-            lastNetworkConnectionId_ = networkConnectionId;
-        }
         if (server_ == nullptr) {
             server_ = ServerProvider::GetSecondServer();
             if (server_) {
@@ -63,6 +57,12 @@ class LocalServerChannel final : public ILocalServerChannel {
                 logger->Error(Tag::Untagged, StdString("[LocalServerChannel] Created but server is null (no server registered?)"));
                 return false;
             }
+        }
+        if (networkConnectionId != lastNetworkConnectionId_) {
+            if (logger) logger->Info(Tag::Untagged, StdString("[LocalServerChannel] Restarting server: connection id changed ") + std::to_string(lastNetworkConnectionId_) + " -> " + std::to_string(networkConnectionId));
+            server_->Stop();
+            server_->Start(DEFAULT_SERVER_PORT);
+            lastNetworkConnectionId_ = networkConnectionId;
         }
 
         if (server_ != nullptr && !server_->IsRunning()) {
