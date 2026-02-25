@@ -39,10 +39,6 @@ class LocalServerChannel final : public ILocalServerChannel {
      * Returns true if we may send/receive: network connected (id != 0), server restarted if id changed, server valid.
      */
     Private Bool PreCheck() {
-        if (server_ == nullptr) {
-            if (logger) logger->Warning(Tag::Untagged, StdString("[LocalServerChannel] PreCheck skip: server is null"));
-            return false;
-        }
         if (wiFiStatusProvider == nullptr) {
             if (logger) logger->Warning(Tag::Untagged, StdString("[LocalServerChannel] PreCheck skip: wiFiStatusProvider is null"));
             return false;
@@ -58,21 +54,25 @@ class LocalServerChannel final : public ILocalServerChannel {
             server_->Start(DEFAULT_SERVER_PORT);
             lastNetworkConnectionId_ = networkConnectionId;
         }
-        if (!server_->IsRunning()) {
+        if (server_ == nullptr) {
+            server_ = ServerProvider::GetSecondServer();
+            if (server_) {
+                logger->Info(Tag::Untagged, StdString("[LocalServerChannel] Created with server from ServerProvider"));
+            }
+            else {
+                logger->Error(Tag::Untagged, StdString("[LocalServerChannel] Created but server is null (no server registered?)"));
+                return false;
+            }
+        }
+
+        if (server_ != nullptr && !server_->IsRunning()) {
             if (logger) logger->Warning(Tag::Untagged, StdString("[LocalServerChannel] PreCheck skip: server not running"));
             return false;
         }
         return true;
     }
 
-    Public LocalServerChannel()
-        : server_(ServerProvider::GetSecondServer()) {
-        if (logger) {
-            if (server_)
-                logger->Info(Tag::Untagged, StdString("[LocalServerChannel] Created with server from ServerProvider"));
-            else
-                logger->Error(Tag::Untagged, StdString("[LocalServerChannel] Created but server is null (no server registered?)"));
-        }
+    Public LocalServerChannel() {
     }
 
     Public Bool ProcessRequest() override {
