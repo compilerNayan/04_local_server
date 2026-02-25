@@ -76,11 +76,11 @@ class LocalServerChannel final : public ILocalServerChannel {
     }
 
     Public Bool ProcessRequest() override {
-       /* if (!PreCheck()) return false;
+        if (!PreCheck()) return false;
         Val request = server_->ReceiveMessage();
         if (request == nullptr) return false;
         requestQueue->EnqueueRequest(request);
-        if (logger) logger->Info(Tag::Untagged, StdString("[LocalServerChannel] Request received and enqueued")); */
+        if (logger) logger->Info(Tag::Untagged, StdString("[LocalServerChannel] Request received and enqueued"));
         return true;
     }
 
