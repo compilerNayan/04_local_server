@@ -12,13 +12,13 @@
 
 class LocalServerThread final : public IRunnable {
 
-    /* @Autowired */
-    Private ILocalServerChannelPtr localServerChannel;
+    ///* -- @Autowired */
+    //Private ILocalServerChannelPtr localServerChannel;
 
     Public Void Run() override {
-        while (true) {
+       /* while (true) {
             localServerChannel->ProcessRequestAndResponse();
-        }
+        } */
     }
 };
 
